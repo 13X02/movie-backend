@@ -1,15 +1,22 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
-import { movies } from './data/movies.data';
+import * as fs from 'fs';
+
+const  rawMovies = fs.readFileSync('src/movies/data/movies.json');
+const jsonData = JSON.parse(rawMovies.toString());
+;
+
+
 @Injectable()
 export class MoviesService {
 
+
     getMovies() {
         console.log('Movies retrieved successfully');
-        return movies;
+        return jsonData;
     }
 
     getMovieByKeyword(keyword: string) {
-        const filteredMovies = movies.filter(movie => movie.title.toLowerCase().includes(keyword.toLowerCase()));
+        const filteredMovies = jsonData.filter(movie => movie.title.toLowerCase().includes(keyword.toLowerCase()));
         if (filteredMovies.length > 0) {
             return {
                 statusCode: HttpStatus.OK,
